@@ -1,0 +1,12 @@
+  // RX json from spiff
+  String RxjsonWifiSettings;
+  mySpiffs::loadSpiffs("jsonWifiSettings.cfg",&RxjsonWifiSettings);
+  StaticJsonDocument<512> RxDoc;
+  deserializeJson(RxDoc, RxjsonWifiSettings);
+  Serial.println("RxDoc from json");
+  Serial.println(RxDoc["NetServerIP"][0].as<String>());
+  Serial.println(RxDoc["NetServerIP"][1].as<String>());
+  Serial.println(RxDoc["NetServerIP"][2].as<String>());
+  Serial.println(RxDoc["NetServerIP"][3].as<String>());
+
+  

@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <meta http-equiv="Content-Length" content="3000">
+  <!-- <meta http-equiv="refresh" content="5"> -->
+  <meta charset="utf-8">
+  <meta name="theme-color" content="#29B6F6">
+  <meta name="viewport" content="initial-scale=1, width=device-width">
+  <title>ConfigTote</title>
+  <style>
+    html { line-height: 1.15; -webkit-text-size-adjust: 100%; }
+    body { margin: 0; font-family: helvetica; background-color: #f7f7f7 }
+    main { display: block; }
+    b { font-weight: bolder; }
+    .texts { padding:10px; }
+    #header { box-shadow: rgba(0, 0, 0, 0.12) 0px 1px 6px, rgba(0, 0, 0, 0.12) 0px 1px 4px; background-color: #03A9F4; color: #fff; z-index: 3; position: relative; }
+    #header h3 { margin: 5px 0 }
+    #section { padding: 10px; }
+    .btn { display: inline-block; padding: 6px 12px; margin-bottom: 0; line-height: 1.42857143; text-align: center; white-space: nowrap; vertical-align: middle; -ms-touch-action: manipulation; touch-action: manipulation; cursor: pointer; -webkit-user-select: none; -moz-user-select: none; -ms-user-select: none; user-select: none; background-image: none; border: 1px solid transparent; cursor: pointer; text-decoration: none; border-radius: 3px; box-shadow: rgba(0, 0, 0, 0.12) 0px 1px 6px, rgba(0, 0, 0, 0.12) 0px 1px 4px; transition: .3s; font-size: 14px; font-weight: 700; }
+    .btn-block { width: 100%; display: block; }
+    .card { padding: 10px; background: red; border-radius: 3px; position: relative; background-color: #fff; transition: box-shadow .25s; border: 1px solid rgba(0, 0, 0, .13); box-shadow: 0 3px 20px 0px rgba(0, 0, 0, 0.1); }
+    .btn-wrapper { padding: 0 10px; }
+    .btn-wrapper .btn { margin-bottom: 10px; width: 100%; }
+    .btn-enviar { color: #ffffff; background-color: #449d48; border-color: #449d48; }
+    .btn-back { color: #333333; background-color: #f8f8f8; border-color: #cccccc; }
+    .card {margin-bottom: 10px;}
+    .main-check { padding-left: 10px; padding-right: 10px; margin-bottom: 20px; }
+    .form-group { margin-bottom: 10px; }
+    .form-control { width: 100%; padding: 4px 6px; font-size: 14px; line-height: 1.42857143; color: #555; background-color: #fff; background-image: none; border: 1px solid #ccc; border-radius: 4px; -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075); box-shadow: inset 0 1px 1px rgba(0,0,0,.075); -webkit-transition: border-color ease-in-out .15s,-webkit-box-shadow ease-in-out .15s; -o-transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s; transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;  box-sizing: border-box; -moz-box-sizing: border-box; -webkit-box-sizing: border-box; }
+    .form-control { box-shadow: none; font-weight: 700; }
+    .form-control { font-size: 14px; }
+    input[type="checkbox" i] { position: relative; top: 2px; }
+    .text-center { text-align: center; }
+    .card label { font-size: 14px; font-weight: bold; color: #666; display: block; margin-bottom: 5px; margin-top: 5px; }
+    .card label:first-child { margin-top: 0 }
+    .btn.disabled, .btn[disabled] { cursor: not-allowed; filter: alpha(opacity=65); -webkit-box-shadow: none; box-shadow: none; opacity: .65; }
+    .card .input-group:last-child { margin-bottom: 0; }
+    .check-box { margin: 0 0 15px -4px; }
+    .check-box label { font-weight: 400; }
+    .ip { display: flex; margin-top: 20px; }
+    .ip-label { align-self: center;margin-right: 5px; }
+    .ip-input { margin-right: 5px; }
+  </style>
+</head>
+<body>
+  <div class="texts" id="header">
+    <h3>Satelitech :: Totem LoRa Config</h3>
+  </div>
+  
+  <div class="texts" id="section">
+    <div class="card">
+      
+
+
+
+      <div class="form-group">
+        <label>Nombre red cliente</label>
+        <input id="nombre-red-cliente" class="form-control" type="text">
+      </div>
+
+      <div class="form-group">
+        <label>Contraseña red cliente</label>
+        <input id="contraseña-red-cliente" class="form-control" type="text">
+      </div>
+
+
+
+    </div>
+  </div>
+  
+  <div class="main-check checkbox">
+    <label>
+      <input id="confirmarEnvioDatos" type="checkbox" name="newdata" value="1" onChange="checkboxchange(this)">
+      ¿Confirmar envio de nuevos datos?
+    </label>
+  </div>
+
+  <div class="btn-wrapper">
+    <button type="button" onClick="sendData()" class="btn btn-enviar btn-block" id="enviar-btn" disabled>Enviar</button>
+    <button type="button" onClick="location.reload()" class="btn btn-back btn-block">Refresh</button>
+  </div>
+
+  <script>
+    // DEFAULT VALUES
+
+    var dnombreRedCliente = '';
+    var dcontraRedCliente = '';
+
+
+
+
+    // regex to validate inputs strings
+    function regExValidation(str) {
+      if (str.length === 0) {
+        return false;
+      }
+      return /^[a-zA-Z0-9_-]*$/.test(str);
+    }
+
+    // selectores
+    var nombreRedAp = document.getElementById('nombre-red-ap');
+    var contraRedAp = document.getElementById('contraseña-red-ap');
+    var nombreRedCliente = document.getElementById('nombre-red-cliente');
+    var contraRedCliente = document.getElementById('contraseña-red-cliente');
+    var ApCheck = document.getElementById('ap-activo');
+    var DhcpCheck = document.getElementById('dhcp-activo');
+    var sBtnEnviar = document.getElementById('enviar-btn');
+
+    // INIT DEFAULT VALUE
+   
+    nombreRedCliente.value = dnombreRedCliente;
+    contraRedCliente.value = dcontraRedCliente;
+ 
+
+
+    function checkboxchange(el) {
+      sBtnEnviar.disabled = !el.checked;
+      return;
+    }
+
+
+
+
+
+    function sendData() {
+      var validation = true;
+
+      [  nombreRedCliente, contraRedCliente].forEach(function (element) {
+        if (!regExValidation(element.value)) {
+          validation = false;
+        }
+      });
+
+      if (!validation) {
+        return alert('Los inputs nombre y contraseña de red no pueden estar vacios y solo permiten caracteres, numeros o - _');
+      }
+
+      var ipArray = [0, 0, 0, 0];
+      var maskArray = [0, 0, 0, 0];
+
+      for (var i = 1; i <= 4; i++) {
+        var maskValue = document.getElementById('mask-'+i);
+        var ipValue = document.getElementById('ip-'+i);
+
+      }
+
+      var url = location.href +
+        '?nombreRedCliente=' + nombreRedCliente.value +
+        '&contraRedCliente=' + contraRedCliente.value ;
+
+
+      location.href = url;
+      return;
+    }
+  </script>
+</body>
+</html>
